@@ -1,0 +1,16 @@
+[Unit]
+Description=KibriaOS First-Boot Branding Setup
+Documentation=https://github.com/kibria75/kibria-os
+After=network.target local-fs.target
+ConditionPathExists=!/var/lib/kibria-os/first-boot-done
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/kibria-os/branding/first-boot/kibria-first-boot.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target

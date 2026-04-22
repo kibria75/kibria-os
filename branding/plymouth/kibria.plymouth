@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=KibriaOS
+Description=KibriaOS boot splash — teal branded theme
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/kibria
+ScriptFile=/usr/share/plymouth/themes/kibria/kibria.script

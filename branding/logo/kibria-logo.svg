@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>KibriaOS</title>
+  <rect width="512" height="512" fill="white"/>
+
+  <!-- Flat-top hexagon, center (256,221), radius 140 — #0F766E -->
+  <polygon
+    points="396,221 326,100 186,100 116,221 186,342 326,342"
+    fill="#0F766E"
+  />
+
+  <!-- White K letterform centred in hexagon -->
+  <!-- Vertical stem  x=216–240, y=143–299 -->
+  <rect x="216" y="143" width="24" height="156" fill="white" rx="2"/>
+  <!-- Upper arm: (240,221)→(298,143), band width ≈18 px -->
+  <polygon points="233,216 291,138 305,148 247,226" fill="white"/>
+  <!-- Lower arm: mirror of upper about y=221 -->
+  <polygon points="247,216 305,294 291,304 233,226" fill="white"/>
+
+  <!-- Wordmark -->
+  <text
+    x="256" y="376"
+    font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+    font-size="44"
+    font-weight="700"
+    fill="#0F766E"
+    text-anchor="middle"
+    letter-spacing="-1"
+  >KibriaOS</text>
+
+  <!-- Tagline -->
+  <text
+    x="256" y="410"
+    font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+    font-size="13"
+    font-weight="400"
+    fill="#134E4A"
+    text-anchor="middle"
+    letter-spacing="3"
+    opacity="0.75"
+  >AI-POWERED LINUX</text>
+</svg>

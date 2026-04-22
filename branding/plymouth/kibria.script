@@ -1,0 +1,153 @@
+/* KibriaOS Plymouth boot splash script
+ * Teal gradient background + hex mark + wordmark + progress bar
+ * Colours: primary #0F766E, deep #134E4A, white #FFFFFF
+ */
+
+/* ── Colours ────────────────────────────────────────────────── */
+TEAL_R  = 0.059; TEAL_G  = 0.463; TEAL_B  = 0.431;   /* #0F766E */
+DEEP_R  = 0.075; DEEP_G  = 0.306; DEEP_B  = 0.290;   /* #134E4A */
+WHITE_R = 1.0;   WHITE_G = 1.0;   WHITE_B = 1.0;
+BAR_R   = 0.4;   BAR_G   = 0.9;   BAR_B   = 0.85;    /* lighter teal */
+
+/* ── Screen geometry ─────────────────────────────────────────── */
+screen_width  = Window.GetWidth();
+screen_height = Window.GetHeight();
+cx = screen_width  / 2;
+cy = screen_height / 2;
+
+/* ── Background ─────────────────────────────────────────────── */
+fun PaintBackground(sprite) {
+    bg = Image.New(screen_width, screen_height);
+    for (y = 0; y < screen_height; y++) {
+        t = y / screen_height;
+        r = TEAL_R * (1 - t) + DEEP_R * t;
+        g = TEAL_G * (1 - t) + DEEP_G * t;
+        b = TEAL_B * (1 - t) + DEEP_B * t;
+        bg.DrawHLine(0, screen_width - 1, y, r, g, b, 1.0);
+    }
+    sprite.SetImage(bg);
+    sprite.SetPosition(0, 0, -100);
+}
+
+bg_sprite = Sprite();
+PaintBackground(bg_sprite);
+
+/* ── Hexagonal "K" mark ──────────────────────────────────────── */
+/* Draw a simplified hex outline + K shape as a scaled image */
+hex_size  = Math.Min(screen_width, screen_height) * 0.18;
+mark_img  = Image.New(hex_size * 3, hex_size * 3);
+
+/* Hex outline (6 sides) */
+hex_cx = hex_size * 1.5;
+hex_cy = hex_size * 1.5;
+hex_r  = hex_size;
+
+for (i = 0; i < 360; i++) {
+    a1 = i       * 3.14159265 / 180;
+    a2 = (i + 1) * 3.14159265 / 180;
+    /* Only draw at hexagon vertices region (approximate with circle for script) */
+    x1 = hex_cx + hex_r * Math.Cos(a1);
+    y1 = hex_cy + hex_r * Math.Sin(a1);
+    mark_img.DrawPixel(x1, y1, WHITE_R, WHITE_G, WHITE_B, 0.9);
+}
+
+/* Stem of K */
+stem_x = hex_cx - hex_size * 0.15;
+stem_w = hex_size * 0.13;
+stem_top    = hex_cy - hex_size * 0.55;
+stem_bottom = hex_cy + hex_size * 0.55;
+for (y = stem_top; y < stem_bottom; y++) {
+    for (x = stem_x; x < stem_x + stem_w; x++) {
+        mark_img.DrawPixel(x, y, WHITE_R, WHITE_G, WHITE_B, 0.95);
+    }
+}
+
+/* Upper arm of K */
+arm_start_x = stem_x + stem_w;
+arm_start_y = hex_cy;
+arm_end_x   = hex_cx + hex_size * 0.4;
+arm_end_y   = stem_top;
+steps = 40;
+for (s = 0; s < steps; s++) {
+    t  = s / steps;
+    ax = arm_start_x + (arm_end_x - arm_start_x) * t;
+    ay = arm_start_y + (arm_end_y - arm_start_y) * t;
+    for (w = -3; w <= 3; w++) {
+        mark_img.DrawPixel(ax + w, ay + w, WHITE_R, WHITE_G, WHITE_B, 0.9);
+    }
+}
+
+/* Lower arm of K */
+arm_end_y2 = stem_bottom;
+for (s = 0; s < steps; s++) {
+    t  = s / steps;
+    ax = arm_start_x + (arm_end_x - arm_start_x) * t;
+    ay = arm_start_y + (arm_end_y2 - arm_start_y) * t;
+    for (w = -3; w <= 3; w++) {
+        mark_img.DrawPixel(ax + w, ay - w, WHITE_R, WHITE_G, WHITE_B, 0.9);
+    }
+}
+
+mark_sprite = Sprite();
+mark_sprite.SetImage(mark_img);
+mark_sprite.SetPosition(cx - hex_size * 1.5, cy - hex_size * 2.2, 0);
+
+/* ── Wordmark text ───────────────────────────────────────────── */
+label = SpriteImage.New("text");
+label.SetText("KibriaOS");
+label.SetColor(WHITE_R, WHITE_G, WHITE_B);
+lbl_sprite = Sprite();
+lbl_sprite.SetImage(label);
+lbl_sprite.SetPosition(cx - label.GetWidth() / 2, cy + hex_size * 0.5, 0);
+
+/* ── Progress bar ────────────────────────────────────────────── */
+bar_w     = screen_width * 0.45;
+bar_h     = 4;
+bar_x     = cx - bar_w / 2;
+bar_y     = screen_height * 0.82;
+bar_bg_r  = 0.1; bar_bg_g = 0.35; bar_bg_b = 0.33;
+
+bar_bg_img = Image.New(bar_w, bar_h);
+bar_bg_img.FillWithColor(bar_bg_r, bar_bg_g, bar_bg_b, 0.5);
+bar_bg_spr = Sprite();
+bar_bg_spr.SetImage(bar_bg_img);
+bar_bg_spr.SetPosition(bar_x, bar_y, 0);
+
+bar_fill_spr = Sprite();
+bar_progress = 0;
+
+fun BootProgressCallback(duration, progress) {
+    bar_progress = progress;
+    fill_w = Math.Max(2, Math.Int(bar_w * progress));
+    fill_img = Image.New(fill_w, bar_h);
+    fill_img.FillWithColor(BAR_R, BAR_G, BAR_B, 1.0);
+    bar_fill_spr.SetImage(fill_img);
+    bar_fill_spr.SetPosition(bar_x, bar_y, 1);
+}
+
+Plymouth.SetBootProgressFunction(BootProgressCallback);
+
+/* ── Password dialog (minimal passthrough) ───────────────────── */
+fun DisplayPasswordCallback(prompt, bulletcount) {
+    /* Keep background, show prompt via default Plymouth mechanism */
+}
+Plymouth.SetDisplayPasswordFunction(DisplayPasswordCallback);
+
+/* ── Normal display ──────────────────────────────────────────── */
+fun DisplayNormalCallback() {
+    /* restore all sprites */
+    bg_sprite.SetOpacity(1);
+    mark_sprite.SetOpacity(1);
+    lbl_sprite.SetOpacity(1);
+}
+Plymouth.SetDisplayNormalFunction(DisplayNormalCallback);
+
+/* ── Quit ────────────────────────────────────────────────────── */
+fun QuitCallback() {
+    bg_sprite.SetOpacity(0);
+    mark_sprite.SetOpacity(0);
+    lbl_sprite.SetOpacity(0);
+    bar_bg_spr.SetOpacity(0);
+    bar_fill_spr.SetOpacity(0);
+}
+Plymouth.SetQuitFunction(QuitCallback);
