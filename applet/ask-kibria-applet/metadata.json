@@ -1,0 +1,8 @@
+{
+  "uuid": "ask-kibria@kibria-os",
+  "name": "Ask-Kibria",
+  "description": "KibriaOS built-in AI assistant panel button — sends prompts to the local Ask-Kibria agent (localhost:8765) and displays the response.",
+  "version": 1,
+  "shell-version": ["46"],
+  "url": "https://github.com/kibria75/kibria-os"
+}

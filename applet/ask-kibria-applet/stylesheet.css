@@ -1,0 +1,47 @@
+.ask-kibria-box {
+  background-color: #181825;
+  padding: 8px;
+  margin: 6px;
+  min-width: 340px;
+  border-radius: 4px;
+}
+
+.ask-kibria-entry {
+  width: 100%;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #45475a;
+}
+
+.ask-kibria-row {
+  margin-top: 4px;
+}
+
+.ask-kibria-send-btn {
+  background-color: #89b4fa;
+  color: #1e1e2e;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ask-kibria-send-btn:hover {
+  background-color: #b4d0fb;
+}
+
+.ask-kibria-send-btn:active {
+  background-color: #74a7f5;
+}
+
+.ask-kibria-response {
+  color: #cdd6f4;
+  font-size: 13px;
+  max-width: 320px;
+  margin-top: 6px;
+  padding: 6px;
+  background-color: #181825;
+  border-radius: 4px;
+}
